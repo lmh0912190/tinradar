@@ -45,6 +45,7 @@ export interface StoryData {
   slug: string;
   category: string | null;
   traffic: number;
+  pictureUrl: string | null;
   summary: string | null;
   articles: StoryArticle[];
   articleCount: number;

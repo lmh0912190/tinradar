@@ -660,6 +660,19 @@ img { max-width: 100%; display: block; }
   padding: 28px;
   margin-bottom: 28px;
   border-top: 5px solid var(--story-accent, #888);
+  overflow: hidden;
+}
+.story-header--has-img {
+  padding: 0;
+}
+.story-header__hero-img {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: contain;
+}
+.story-header__body {
+  padding: 20px 28px 24px;
 }
 .story-header__meta {
   display: flex;

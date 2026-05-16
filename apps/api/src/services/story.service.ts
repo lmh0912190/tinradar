@@ -56,8 +56,21 @@ export async function upsertStory(trendId: number, data: {
 
 export async function getStoryBySlug(slug: string): Promise<StoryData | null> {
   const story = await db
-    .select()
+    .select({
+      id: stories.id,
+      trendId: stories.trendId,
+      keyword: stories.keyword,
+      slug: stories.slug,
+      category: stories.category,
+      traffic: stories.traffic,
+      summary: stories.summary,
+      articleCount: stories.articleCount,
+      sourceCount: stories.sourceCount,
+      updatedAt: stories.updatedAt,
+      pictureUrl: trends.pictureUrl,
+    })
     .from(stories)
+    .leftJoin(trends, eq(trends.id, stories.trendId))
     .where(and(eq(stories.slug, slug), eq(stories.isPublished, true)))
     .limit(1);
 
@@ -76,6 +89,7 @@ export async function getStoryBySlug(slug: string): Promise<StoryData | null> {
     slug: s.slug,
     category: s.category,
     traffic: s.traffic,
+    pictureUrl: s.pictureUrl ?? null,
     summary: s.summary,
     articles: arts.map((a) => ({
       id: a.id,
