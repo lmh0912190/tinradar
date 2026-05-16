@@ -2,7 +2,7 @@
 
 ## 1. Tổng quan sản phẩm
 
-**Tin Radar** là một nền tảng tin tức thế hệ mới, tự động tổng hợp và trực quan hóa các xu hướng tìm kiếm tại Việt Nam theo thời gian thực. Thay vì đăng bài như các trang tin truyền thống, Tin Radar cung cấp **bản đồ dư luận** dạng bubble chart và **deep-dive story page** cho từng trend — giúp người đọc nắm bắt bức tranh toàn cảnh thay vì đọc từng bài rời rạc.
+**Tin Radar** là một nền tảng tin tức thế hệ mới, tự động tổng hợp và trực quan hóa các xu hướng tìm kiếm tại Việt Nam theo thời gian thực. Thay vì đăng bài như các trang tin truyền thống, Tin Radar cung cấp **bản đồ dư luận** dạng treemap mosaic và **deep-dive story page** cho từng trend — giúp người đọc nắm bắt bức tranh toàn cảnh thay vì đọc từng bài rời rạc.
 
 ## 2. Vấn đề cần giải quyết
 
@@ -17,17 +17,15 @@
 
 | Tầng | Mô tả | Tương tự |
 |------|--------|----------|
-| **Tin Radar** (Trang chủ) | Dashboard trực quan hóa trending topics dạng bubble chart | Bloomberg Terminal cho đại chúng |
+| **Tin Radar** (Trang chủ) | Dashboard trực quan hóa trending topics dạng treemap mosaic | Bloomberg Terminal cho đại chúng |
 | **Câu Chuyện Đằng Sau** (Story Page) | Deep-dive tự động cho từng trend: tóm lược, so sánh nguồn, timeline | Wikipedia cho tin tức thời sự |
 
 ### 3.2 Core Features — MVP
 
-#### F1: Trang chủ — Radar View
-- **Bubble chart**: Mỗi trend là 1 bubble, kích thước tỷ lệ với lượng tìm kiếm, màu sắc theo category
-- **Filter bar**: Lọc theo danh mục (Kinh doanh, Tài chính, Thể thao, Công nghệ, Xã hội, Giải trí, Đời sống)
-- **Sort**: "Hot nhất" (theo traffic) / "Mới nhất" (theo thời gian)
+#### F1: Trang chủ — 3 tầng thông tin
 - **Stats bar**: Tổng trends đang active, tổng lượt tìm kiếm, số nguồn tin
-- **List view**: Bên dưới bubble chart, hiển thị chi tiết ranking với category badge, traffic, thời gian
+- **Treemap Hero**: Mỗi trend là 1 ô, diện tích tỷ lệ với lượng tìm kiếm, màu sắc theo category. Trend nóng nhất chiếm gần nửa bên trái, các trend nhỏ co lại. Click ô → vào Story Page
+- **Accordion List**: Bên dưới treemap, mỗi trend là 1 thanh bar có rank, progress bar tỷ lệ %, category badge, traffic number. Click bar → mở rộng hiển thị preview tin tức + nút "Xem câu chuyện đầy đủ →". Chỉ 1 accordion mở tại 1 thời điểm
 
 #### F2: Story Page — Deep-Dive
 - **Header**: Keyword, category badge, traffic real-time, thời gian cập nhật
@@ -43,7 +41,7 @@
 
 #### F4: Responsive Design
 - Mobile-first, hoạt động tốt trên điện thoại
-- Bubble chart responsive (co giãn theo viewport)
+- Treemap mosaic responsive (co giãn theo viewport)
 
 ### 3.3 Features — Post-MVP
 
@@ -57,16 +55,21 @@
 ## 4. User Flow
 
 ```
-Người dùng → Trang chủ (Radar View)
-  ├── Xem bubble chart → nắm bức tranh toàn cảnh
-  ├── Filter theo danh mục → thu hẹp quan tâm
-  ├── Scroll xuống list view → xem ranking chi tiết
-  └── Click vào trend (bubble hoặc list item)
-        └── Story Page
-              ├── Đọc tóm lược AI
-              ├── Expand từng nguồn để so sánh
-              ├── Xem timeline
-              └── Quay lại Radar (back button)
+Người dùng → Trang chủ (/)
+  ├── Treemap Hero: nhìn tổng quan — ô nào to nhất = hot nhất
+  │   └── Click ô → Story Page (/xu-huong/{slug})
+  │
+  ├── Scroll xuống → Accordion List
+  │   ├── Scan ranks, progress bars, traffic
+  │   ├── Click bar → expand preview (tin tức + nguồn)
+  │   │   └── "Xem câu chuyện đầy đủ →" → Story Page
+  │   └── Chỉ 1 accordion mở tại 1 thời điểm
+  │
+  └── Story Page
+        ├── Đọc tóm lược AI
+        ├── Expand từng nguồn để so sánh
+        ├── Xem timeline
+        └── "‹ Quay lại" → Trang chủ
 ```
 
 ## 5. Target Audience

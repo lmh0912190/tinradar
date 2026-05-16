@@ -16,6 +16,7 @@
     "@fastify/rate-limit": "^10.2.1",
     "@trend-radar/db": "workspace:*",
     "@trend-radar/shared": "workspace:*",
+    "drizzle-orm": "^0.38.0",
     "fast-xml-parser": "^4.5.1",
     "fastify": "^5.2.1",
     "ioredis": "^5.4.2",

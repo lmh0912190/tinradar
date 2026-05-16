@@ -1,7 +1,9 @@
 export { formatTraffic, timeAgo, formatViDate } from '@trend-radar/shared';
+import { CATEGORIES, getCategoryByName } from './constants';
 
-export function calcBubbleSize(traffic: number, maxTraffic: number, isMobile = false): number {
-  const ratio = maxTraffic > 0 ? traffic / maxTraffic : 0;
-  if (isMobile) return Math.round(60 + Math.sqrt(ratio) * 80);
-  return Math.round(80 + Math.sqrt(ratio) * 100);
+export function getCategoryColor(categoryName: string, trendId: number) {
+  const cat = getCategoryByName(categoryName);
+  if (cat.slug !== 'tat-ca') return cat;
+  const colorCats = CATEGORIES.slice(1);
+  return colorCats[trendId % colorCats.length]!;
 }

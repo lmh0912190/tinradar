@@ -172,7 +172,7 @@ CREATE INDEX idx_cron_logs_job ON cron_logs(job_name, started_at DESC);
 ### 2.1 Key Patterns
 
 ```
-Namespace: tr:  (Tin Radar)
+Namespace: tr:  (trend radar)
 
 Cache keys:
   tr:radar:data                    → JSON: processed radar data cho homepage

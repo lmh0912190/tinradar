@@ -1,45 +1,96 @@
-import Link from 'next/link';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import type { RadarTrend } from '@trend-radar/shared';
-import { formatTraffic, timeAgo } from '@/lib/utils';
-import { getCategoryByName } from '@/lib/constants';
+import { formatTraffic, timeAgo, getCategoryColor } from '@/lib/utils';
+import { getSourceColor } from '@trend-radar/shared';
 import { CategoryBadge } from '@/components/shared/CategoryBadge';
 
 interface TrendListItemProps {
   trend: RadarTrend;
   rank: number;
+  pct: number;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-export function TrendListItem({ trend, rank }: TrendListItemProps) {
-  const cat = getCategoryByName(trend.category);
+export function TrendListItem({ trend, rank, pct, isOpen, onToggle }: TrendListItemProps) {
+  const router = useRouter();
+  const cat = getCategoryColor(trend.category, trend.id);
+  const barFill = Math.min(pct * 3.2, 100);
+  const isEven = rank % 2 === 0;
 
   return (
-    <Link
-      href={`/xu-huong/${trend.slug}`}
-      className="trend-list-item"
-      style={{ '--item-accent': cat.accent } as React.CSSProperties}
-    >
-      <span className="trend-list-item__rank">{rank}</span>
-      <div
-        className="trend-list-item__bar"
-        style={{ background: `linear-gradient(to bottom, ${cat.accent}, ${cat.accent}60)` }}
-      />
-      <div className="trend-list-item__info">
-        <div className="trend-list-item__title">{trend.keyword}</div>
-        <div className="trend-list-item__meta">
+    <div className={`accordion-row${isOpen ? ' accordion-row--open' : ''}`}>
+      <button
+        className="accordion-row__header"
+        style={{
+          background: isOpen ? cat.bg : isEven ? 'var(--bg-card-alt)' : 'var(--bg-card)',
+        }}
+        onClick={onToggle}
+        aria-expanded={isOpen}
+      >
+        <span className="accordion-row__rank">{rank}</span>
+        <span className="accordion-row__bar" style={{ background: cat.accent }} />
+        <div className="accordion-row__progress">
+          <div className="accordion-row__progress-track">
+            <div
+              className="accordion-row__progress-fill"
+              style={{ width: `${barFill}%`, background: cat.accent }}
+            />
+          </div>
+          <span className="accordion-row__pct">{Math.round(pct)}%</span>
+        </div>
+        <span className="accordion-row__keyword">{trend.keyword}</span>
+        <span className="accordion-row__cat-badge">
           <CategoryBadge name={trend.category} small />
-          {trend.articleCount > 0 && (
-            <span>{trend.articleCount} bài viết</span>
-          )}
-          {trend.topSource && (
-            <span style={{ color: 'var(--text-subtle)' }}>{trend.topSource}</span>
+        </span>
+        <div className="accordion-row__traffic-col">
+          <span className="accordion-row__traffic" style={{ color: cat.accent }}>
+            {formatTraffic(trend.traffic)}
+          </span>
+          {trend.pubDate && (
+            <span className="accordion-row__time">{timeAgo(trend.pubDate)}</span>
           )}
         </div>
+        <span className="accordion-row__chevron" aria-hidden>▾</span>
+      </button>
+
+      <div className="accordion-row__content" aria-hidden={!isOpen}>
+        <div className="accordion-row__news">
+          {trend.previewArticles.length > 0
+            ? trend.previewArticles.map((art, i) => (
+                <div key={i} className="accordion-row__news-item">
+                  <span className="accordion-row__dot" style={{ background: cat.accent }} />
+                  <div>
+                    <div className="accordion-row__news-title">{art.title}</div>
+                    <div className="accordion-row__news-meta">
+                      <span style={{ color: getSourceColor(art.sourceName), fontWeight: 600 }}>
+                        {art.sourceName}
+                      </span>
+                      {art.publishedAt && <span>{timeAgo(art.publishedAt)}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))
+            : (
+              <div className="accordion-row__news-item">
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                  Đang tổng hợp tin tức...
+                </span>
+              </div>
+            )}
+        </div>
+        <button
+          className="accordion-row__btn"
+          style={{ borderColor: `${cat.accent}50`, color: cat.accent }}
+          onClick={() => router.push(`/xu-huong/${trend.slug}`)}
+          onMouseEnter={(e) => { e.currentTarget.style.background = `${cat.accent}18`; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          Xem câu chuyện đầy đủ →
+        </button>
       </div>
-      <div className="trend-list-item__traffic">
-        <div className="trend-list-item__traffic-num">{formatTraffic(trend.traffic)}</div>
-        <div className="trend-list-item__time">{timeAgo(trend.pubDate)}</div>
-      </div>
-      <span className="trend-list-item__chevron">›</span>
-    </Link>
+    </div>
   );
 }

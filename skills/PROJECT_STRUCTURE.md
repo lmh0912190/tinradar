@@ -3,7 +3,7 @@
 ## 1. Turborepo Monorepo Layout
 
 ```
-trend-radar/
+diem-nong/
 ├── turbo.json
 ├── package.json                         # Root workspace config
 ├── .env.example
@@ -204,8 +204,8 @@ trend-radar/
     "next": "^15",
     "react": "^19",
     "react-dom": "^19",
-    "@trend-radar/shared": "workspace:*",
-    "@trend-radar/db": "workspace:*"
+    "@diem-nong/shared": "workspace:*",
+    "@diem-nong/db": "workspace:*"
   }
 }
 ```
@@ -228,8 +228,8 @@ trend-radar/
     "fast-xml-parser": "^4",           // RSS XML parsing
     "ioredis": "^5",
     "@anthropic-ai/sdk": "latest",
-    "@trend-radar/db": "workspace:*",
-    "@trend-radar/shared": "workspace:*"
+    "@diem-nong/db": "workspace:*",
+    "@diem-nong/shared": "workspace:*"
   }
 }
 ```
@@ -269,9 +269,9 @@ services:
     image: postgres:16-alpine
     ports: ["5432:5432"]
     environment:
-      POSTGRES_DB: trendradar
-      POSTGRES_USER: trendradar
-      POSTGRES_PASSWORD: trendradar
+      POSTGRES_DB: diemnong
+      POSTGRES_USER: diemnong
+      POSTGRES_PASSWORD: diemnong
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -330,7 +330,7 @@ volumes:
 # .env.example
 
 # Database
-DATABASE_URL=postgresql://trendradar:trendradar@localhost:5432/trendradar
+DATABASE_URL=postgresql://diemnong:diemnong@localhost:5432/diemnong
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -345,7 +345,7 @@ INTERNAL_API_KEY=your-internal-api-key    # Cho internal cron endpoints
 
 # Next.js
 NEXT_PUBLIC_API_URL=http://localhost:3001  # URL tới Fastify API
-NEXT_PUBLIC_SITE_URL=https://trendradar.vn
+NEXT_PUBLIC_SITE_URL=https://diemnong.vn
 
 # Google (không cần API key, dùng public RSS)
 GOOGLE_TRENDS_GEO=VN
@@ -360,14 +360,14 @@ GOOGLE_NEWS_GL=VN
 ```bash
 # 1. Clone & install
 git clone <repo>
-cd trend-radar
+cd diem-nong
 pnpm install
 
 # 2. Start infrastructure
 docker compose up -d
 
 # 3. Run migrations
-pnpm --filter @trend-radar/db db:migrate
+pnpm --filter @diem-nong/db db:migrate
 
 # 4. Start dev (all apps)
 pnpm dev
@@ -402,7 +402,7 @@ apps/web              → db, shared
 - **TypeScript strict mode** tất cả packages
 - **ESLint** + **Prettier** shared config
 - **Naming**: camelCase cho variables/functions, PascalCase cho components/types, kebab-case cho files
-- **Imports**: absolute paths via tsconfig paths (`@/components/...`, `@trend-radar/shared`)
+- **Imports**: absolute paths via tsconfig paths (`@/components/...`, `@diem-nong/shared`)
 - **Components**: functional components + hooks, no class components
 - **Async**: async/await, không callbacks
 - **Error handling**: try/catch with typed errors, never swallow errors silently

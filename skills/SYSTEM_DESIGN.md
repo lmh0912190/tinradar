@@ -333,11 +333,11 @@ export async function generateMetadata({ params }): Promise<Metadata> {
       publishedTime: story.created_at,
       modifiedTime: story.updated_at,
       section: story.category,
-      url: `https://trendradar.vn/xu-huong/${story.slug}`,
+      url: `https://diemnong.vn/xu-huong/${story.slug}`,
       images: [story.og_image_url],  // Generated OG image
     },
     alternates: {
-      canonical: `https://trendradar.vn/xu-huong/${story.slug}`,
+      canonical: `https://diemnong.vn/xu-huong/${story.slug}`,
     },
   };
 }
@@ -362,7 +362,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
     "name": "Tin Radar",
     "logo": { "@type": "ImageObject", "url": "..." }
   },
-  "mainEntityOfPage": "https://trendradar.vn/xu-huong/u23-viet-nam",
+  "mainEntityOfPage": "https://diemnong.vn/xu-huong/u23-viet-nam",
   "about": {
     "@type": "Thing",
     "name": "U23 Việt Nam"

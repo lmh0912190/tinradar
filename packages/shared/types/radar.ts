@@ -1,3 +1,10 @@
+export interface TrendPreviewArticle {
+  title: string;
+  sourceName: string;
+  articleUrl: string;
+  publishedAt: string | null;
+}
+
 export interface RadarTrend {
   id: number;
   keyword: string;
@@ -8,6 +15,7 @@ export interface RadarTrend {
   topSource: string | null;
   pubDate: string | null;
   pictureUrl: string | null;
+  previewArticles: TrendPreviewArticle[];
 }
 
 export interface RadarStats {
@@ -45,12 +53,3 @@ export interface StoryData {
 }
 
 export type SortMode = 'traffic' | 'time';
-export type CategorySlug =
-  | 'tat-ca'
-  | 'kinh-doanh'
-  | 'tai-chinh'
-  | 'the-thao'
-  | 'cong-nghe'
-  | 'xa-hoi'
-  | 'giai-tri'
-  | 'doi-song';

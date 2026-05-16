@@ -1,6 +1,7 @@
 import { db, trends, articles } from '@trend-radar/db';
-import { eq, and, desc, gte, sql } from 'drizzle-orm';
+import { eq, and, desc, gte, lt, sql } from 'drizzle-orm';
 import { generateSlug } from '@trend-radar/shared';
+import { classifyByHeuristic } from '../utils/category-classifier.js';
 import { logger } from '../utils/logger.js';
 
 export interface UpsertTrendInput {
@@ -33,6 +34,8 @@ export async function upsertTrend(input: UpsertTrendInput): Promise<number> {
     return existing[0].id;
   }
 
+  const heuristicCategory = classifyByHeuristic(input.keyword, input.pictureSource);
+
   const inserted = await db.insert(trends).values({
     keyword: input.keyword,
     slug,
@@ -40,6 +43,7 @@ export async function upsertTrend(input: UpsertTrendInput): Promise<number> {
     trendDate: today,
     pictureUrl: input.pictureUrl,
     pictureSource: input.pictureSource,
+    category: heuristicCategory,
   }).returning({ id: trends.id });
 
   return inserted[0]!.id;
@@ -99,6 +103,6 @@ export async function deactivateOldTrends(): Promise<number> {
   const result = await db
     .update(trends)
     .set({ isActive: false, updatedAt: new Date() })
-    .where(and(eq(trends.isActive, true), sql`${trends.lastSeenAt} < ${cutoff}`));
+    .where(and(eq(trends.isActive, true), lt(trends.lastSeenAt, cutoff)));
   return (result as unknown as { rowCount: number }).rowCount ?? 0;
 }

@@ -60,6 +60,7 @@ export async function runCheckBatchResultsJob(): Promise<{ processed: number }> 
           aiBatchId: batch.batchId,
         });
 
+        // Only overwrite if AI returned a valid category; preserve heuristic-set category otherwise.
         if (result.category) {
           await _db.update(trends).set({ category: result.category, updatedAt: new Date() }).where(eq(trends.id, result.trendId));
         }

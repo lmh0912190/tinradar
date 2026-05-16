@@ -1,7 +1,6 @@
 import { getRadarData } from '@/lib/api';
 import { Masthead } from '@/components/shared/Masthead';
 import { Footer } from '@/components/shared/Footer';
-import { StatsBar } from '@/components/radar/StatsBar';
 import { RadarView } from '@/components/radar/RadarView';
 
 export const revalidate = 300;
@@ -11,12 +10,9 @@ export default async function HomePage() {
 
   return (
     <main className="page-wrapper page-enter">
-      <Masthead />
+      <Masthead stats={data?.stats} />
       {data ? (
-        <>
-          <StatsBar stats={data.stats} />
-          <RadarView initialData={data} />
-        </>
+        <RadarView initialData={data} />
       ) : (
         <div className="error-state">⚠ Không thể tải dữ liệu. Thử lại sau.</div>
       )}

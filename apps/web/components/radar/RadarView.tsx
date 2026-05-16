@@ -42,13 +42,18 @@ export function RadarView({ initialData, defaultCategory = 'tat-ca' }: RadarView
         onCategoryChange={setActiveCategory}
         onSortChange={setSort}
       />
-      <BubbleChart trends={filtered} />
       <div className="section-divider">
         <div className="section-divider__line" />
-        <span className="section-divider__text">Chi tiết</span>
+        <span className="section-divider__text">Bản đồ sức nóng — ô càng to, càng nhiều người quan tâm</span>
         <div className="section-divider__line" />
       </div>
-      <TrendList trends={filtered} />
+      <BubbleChart trends={filtered} totalSearches={initialData.stats.totalSearches} />
+      <div className="section-divider">
+        <div className="section-divider__line" />
+        <span className="section-divider__text">Chi tiết từng xu hướng</span>
+        <div className="section-divider__line" />
+      </div>
+      <TrendList trends={filtered} totalSearches={initialData.stats.totalSearches} />
     </>
   );
 }

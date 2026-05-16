@@ -3,6 +3,7 @@ import { runFetchTrendsJob } from './fetch-trends.job.js';
 import { runProcessAiBatchJob } from './process-ai-batch.job.js';
 import { runCheckBatchResultsJob } from './check-batch-results.job.js';
 import { runCleanupJob } from './cleanup.job.js';
+import { runGenerateSitemapJob } from './generate-sitemap.job.js';
 import { db, cronLogs } from '@trend-radar/db';
 import { eq } from 'drizzle-orm';
 import { logger } from '../utils/logger.js';
@@ -31,12 +32,16 @@ async function withCronLog(jobName: string, fn: () => Promise<unknown>): Promise
 
 export function startScheduler(): void {
   cron.schedule('*/30 * * * *', () => withCronLog('fetch-trends', runFetchTrendsJob));
-
   cron.schedule('5-59/30 * * * *', () => withCronLog('process-ai-batch', runProcessAiBatchJob));
-
   cron.schedule('*/5 * * * *', () => withCronLog('check-batch-results', runCheckBatchResultsJob));
-
-  cron.schedule('0 * * * *', () => withCronLog('cleanup', runCleanupJob));
+  cron.schedule('0 * * * *', () => withCronLog('cleanup-old-trends', runCleanupJob));
+  cron.schedule('0 3 * * *', () => withCronLog('generate-sitemap', runGenerateSitemapJob));
 
   logger.info('Scheduler started', { event: 'scheduler_start', service: 'cron' });
+
+  // Run all jobs once on startup
+  withCronLog('fetch-trends', runFetchTrendsJob);
+  withCronLog('process-ai-batch', runProcessAiBatchJob);
+  withCronLog('check-batch-results', runCheckBatchResultsJob);
+  withCronLog('cleanup', runCleanupJob);
 }

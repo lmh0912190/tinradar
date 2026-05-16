@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { config } from '../config.js';
+import { validateCategory } from '../utils/category-classifier.js';
 import { logger } from '../utils/logger.js';
 
 const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
@@ -89,7 +90,7 @@ export async function processBatchResults(batchId: string, requestMap: Map<strin
             customId: result.custom_id,
             trendId,
             summary: parsed.summary ?? null,
-            category: parsed.category ?? null,
+            category: validateCategory(parsed.category),
             error: null,
           });
         } catch {
@@ -115,7 +116,7 @@ export async function generateSummaryRealtime(keyword: string, traffic: number, 
     const content = msg.content[0];
     if (content?.type === 'text') {
       const parsed = JSON.parse(content.text) as { summary?: string; category?: string };
-      return { summary: parsed.summary ?? null, category: parsed.category ?? null };
+      return { summary: parsed.summary ?? null, category: validateCategory(parsed.category) };
     }
   } catch (err) {
     logger.error('Realtime AI generation failed', { event: 'ai_realtime_fail', keyword, error: String(err) });

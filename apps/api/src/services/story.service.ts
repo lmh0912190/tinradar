@@ -23,7 +23,7 @@ export async function upsertStory(trendId: number, data: {
 
   if (existing.length > 0 && existing[0]) {
     await db.update(stories).set({
-      category: data.category,
+      ...(data.category !== null ? { category: data.category } : {}),
       summary: data.summary,
       traffic: data.traffic,
       articleCount: data.articleCount,
@@ -93,18 +93,29 @@ export async function getStoryBySlug(slug: string): Promise<StoryData | null> {
 }
 
 export async function getTrendsNeedingStories(): Promise<Array<{ trendId: number; keyword: string; slug: string; traffic: number }>> {
+  // Return active trends that either have no story, or whose story's AI summary predates
+  // the most recent article (needs refresh). Use simple approach: all active trends,
+  // ranked by traffic. The batch processor deduplicates in-flight work via Redis queue.
   const result = await db
-    .select({ trendId: trends.id, keyword: trends.keyword, slug: trends.slug, traffic: trends.traffic })
+    .select({
+      trendId: trends.id,
+      keyword: trends.keyword,
+      slug: trends.slug,
+      traffic: trends.traffic,
+      aiGeneratedAt: stories.aiGeneratedAt,
+    })
     .from(trends)
     .leftJoin(stories, eq(stories.trendId, trends.id))
-    .where(and(eq(trends.isActive, true)))
+    .where(eq(trends.isActive, true))
     .orderBy(desc(trends.traffic))
     .limit(50);
 
-  return result.map((r) => ({
-    trendId: r.trendId,
-    keyword: r.keyword,
-    slug: r.slug,
-    traffic: r.traffic,
-  }));
+  return result
+    .filter((r) => !r.aiGeneratedAt)
+    .map((r) => ({
+      trendId: r.trendId,
+      keyword: r.keyword,
+      slug: r.slug,
+      traffic: r.traffic,
+    }));
 }

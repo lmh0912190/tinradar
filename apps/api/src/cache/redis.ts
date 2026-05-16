@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import { config } from '../config.js';
 import { logger } from '../utils/logger.js';
 
@@ -10,7 +10,7 @@ export function getRedis(): Redis {
       maxRetriesPerRequest: 3,
       lazyConnect: true,
     });
-    redis.on('error', (err) => {
+    redis.on('error', (err: Error) => {
       logger.error('Redis error', { event: 'redis_error', error: String(err) });
     });
   }
