@@ -29,8 +29,9 @@ module.exports = {
     },
     {
       name: 'tinradar-web',
-      script: path.join(root, 'node_modules/.bin/next'),
-      args: 'start',
+      script: 'pnpm',
+      args: 'run start',
+      interpreter: 'none',
       cwd: path.join(root, 'apps/web'),
       instances: 1,
       autorestart: true,

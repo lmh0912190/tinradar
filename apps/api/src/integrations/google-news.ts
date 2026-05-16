@@ -1,5 +1,5 @@
 import { config } from '../config.js';
-import { createXmlParser, stripHtml } from '../utils/xml-parser.js';
+import { createXmlParser, stripHtml, decodeEntities } from '../utils/xml-parser.js';
 
 export interface NewsArticle {
   title: string;
@@ -31,7 +31,7 @@ export async function fetchGoogleNewsRss(keyword: string): Promise<NewsArticle[]
 
   return rawItems.map((raw) => {
     const item = raw as Record<string, unknown>;
-    const fullTitle = String(item['title'] ?? '').trim();
+    const fullTitle = decodeEntities(String(item['title'] ?? ''));
 
     const lastDashIdx = fullTitle.lastIndexOf(' - ');
     const title = lastDashIdx > 0 ? fullTitle.substring(0, lastDashIdx).trim() : fullTitle;

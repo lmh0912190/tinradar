@@ -1,6 +1,6 @@
 import { config } from '../config.js';
 import { parseTrafficString } from '../utils/traffic-parser.js';
-import { createXmlParser } from '../utils/xml-parser.js';
+import { createXmlParser, decodeEntities } from '../utils/xml-parser.js';
 import { logger } from '../utils/logger.js';
 
 export interface TrendRssItem {
@@ -36,7 +36,7 @@ export async function fetchGoogleTrendsRss(): Promise<TrendRssItem[]> {
 
   return rawItems.map((raw) => {
     const item = raw as Record<string, unknown>;
-    const keyword = String(item['title'] ?? '').trim();
+    const keyword = decodeEntities(String(item['title'] ?? ''));
     const trafficString = String(item['ht:approx_traffic'] ?? '0');
     const newsItemsRaw = (item['ht:news_item'] as unknown[]) ?? [];
 
@@ -50,7 +50,7 @@ export async function fetchGoogleTrendsRss(): Promise<TrendRssItem[]> {
       newsItems: newsItemsRaw.map((ni) => {
         const n = ni as Record<string, unknown>;
         return {
-          title: String(n['ht:news_item_title'] ?? '').trim(),
+          title: decodeEntities(String(n['ht:news_item_title'] ?? '')),
           url: String(n['ht:news_item_url'] ?? '').trim(),
           source: String(n['ht:news_item_source'] ?? '').trim(),
           picture: n['ht:news_item_picture'] ? String(n['ht:news_item_picture']) : null,
