@@ -82,7 +82,7 @@ img { max-width: 100%; display: block; }
   50% { opacity: 0.4; transform: scale(0.7); }
 }
 .radar-logo__sweep {
-  transform-origin: 50px 50px;
+  transform-origin: 50px 52px;
   animation: radar-sweep-rotate 4s linear infinite;
 }
 .radar-logo__blip {

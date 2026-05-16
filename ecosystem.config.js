@@ -1,5 +1,4 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const root = __dirname;
 
@@ -15,7 +14,15 @@ module.exports = {
       max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        ...process.env,
+        DATABASE_URL: 'postgresql://diemnong:CHANGE_ME@localhost:5432/diemnong',
+        REDIS_URL: 'redis://localhost:6379',
+        ANTHROPIC_API_KEY: 'sk-ant-CHANGE_ME',
+        API_PORT: '3001',
+        API_HOST: '127.0.0.1',
+        INTERNAL_API_KEY: 'CHANGE_ME',
+        GOOGLE_TRENDS_GEO: 'VN',
+        GOOGLE_NEWS_HL: 'vi',
+        GOOGLE_NEWS_GL: 'VN',
       },
       error_file: '/var/log/tinradar/api-error.log',
       out_file: '/var/log/tinradar/api-out.log',
@@ -31,8 +38,12 @@ module.exports = {
       max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        PORT: 3000,
-        ...process.env,
+        PORT: '3000',
+        DATABASE_URL: 'postgresql://diemnong:CHANGE_ME@localhost:5432/diemnong',
+        REDIS_URL: 'redis://localhost:6379',
+        NEXT_PUBLIC_API_URL: 'https://diemnong.vn/api',
+        NEXT_PUBLIC_SITE_URL: 'https://diemnong.vn',
+        INTERNAL_API_KEY: 'CHANGE_ME',
       },
       error_file: '/var/log/tinradar/web-error.log',
       out_file: '/var/log/tinradar/web-out.log',
