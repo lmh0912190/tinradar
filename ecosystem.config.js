@@ -17,7 +17,7 @@ module.exports = {
         DATABASE_URL: 'postgresql://diemnong:CHANGE_ME@localhost:5432/diemnong',
         REDIS_URL: 'redis://localhost:6379',
         ANTHROPIC_API_KEY: 'sk-ant-CHANGE_ME',
-        API_PORT: '3001',
+        API_PORT: '4001',
         API_HOST: '127.0.0.1',
         INTERNAL_API_KEY: 'CHANGE_ME',
         GOOGLE_TRENDS_GEO: 'VN',
@@ -39,7 +39,7 @@ module.exports = {
       max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',
-        PORT: '3000',
+        PORT: '4000',
         DATABASE_URL: 'postgresql://diemnong:CHANGE_ME@localhost:5432/diemnong',
         REDIS_URL: 'redis://localhost:6379',
         NEXT_PUBLIC_API_URL: 'https://diemnong.vn/api',

@@ -5,6 +5,6 @@ export default {
   out: './migrations',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env['DATABASE_URL'] ?? 'postgresql://trendradar:trendradar@localhost:5432/trendradar',
+    url: process.env['DATABASE_URL'] ?? 'postgresql://trendradar:Trendradar@2026@localhost:5432/trendradar',
   },
 } satisfies Config;
